@@ -32,7 +32,18 @@
       :typescript { :lsp "tsserver" :formatter "biome" :tab {:width 4 :expand false } }
       :javascript { :lsp "tsserver" :formatter "biome" }
       :go { :lsp "gopls" :formatter ["goimports" "gofmt"] }
-      :rust {} }})
+      :rust {} }
+  :features 
+    { :nvim-treesitter true
+      :Comment true
+      :telescope true
+      :nvim-cmp true
+      :conform true
+      :nvim-lspconfig  true
+      :conform true
+      :gitsigns true }
+  :themes 
+    { :oxocarbon true }})
 
 (local default-lang-settings
        { :filetypes { :typescript [ "typescript" "typescriptreact" ] } 
@@ -142,51 +153,14 @@
     (vim.api.nvim_buf_set_option buf "readonly" true)
     (vim.api.nvim_set_current_buf buf))
 
-;; Plugin management
-(fn plugins/get-paths []
-  (let [runtime-paths (vim.api.nvim_list_runtime_paths)]
-    (mapcat
-      (fn [path] 
-        (vim.fn.globpath (.. path "/pack/*/start/*") "" 0 1)) 
-      runtime-paths)))
-
-(fn plugins/extract-author [path]
-  (match (string.match path "/pack/(.*)/start/(.*)/$")
-    (a b) {:author a :plugin b :key (.. a "/" b)}
-    _ nil))
-
-(fn plugins/locate [] 
-  (let [entries (map plugins/extract-author (plugins/get-paths))
-        result {}]
-        (each [_ cur (ipairs entries)]
-          (tset result cur.key cur))
-        result))
-
-(fn plugins/path-to-map [path]
-  (let [[author plugin] (split path "/")]
-    {:author author :plugin plugin :key path}))
-
-(fn plugins/map-to-feature [m]
-  (remove-suffix m.plugin ".nvim"))
-
-(fn plugins/check [paths]
-  (let [located (plugins/locate)
-        feature {}
-        unavailable-plugins []]
-    (each [_ x (ipairs paths)] 
-      (match (. located x)
-        nil (do
-              (table.insert unavailable-plugins x)
-              (tset feature ((pipe plugins/path-to-map plugins/map-to-feature) x) false))
-        ok (tset feature (plugins/map-to-feature ok) true)))
-    (when (> (# unavailable-plugins) 0)
-      (show-text-buf 
-        (concat-arrays ["Plugins that are not avaialbe:"] unavailable-plugins)))
-    (fn [key] (. feature key))))
-
 ;; Configure feature flags first (based on plugins)
-(local feature 
-  (plugins/check plugin-list))
+(fn feature [name]
+  (let [f (. cfg :features)]
+    (if f (. f name) false)))
+
+(fn theme [name]
+  (let [f (. cfg :themes)]
+    (if f (. f name) false)))
 
 ;; Editor
 (each 
@@ -197,10 +171,8 @@
 (when (feature :nvim-treesitter)
   (let [configs (require "nvim-treesitter.configs")]
     (configs.setup {
-      :highlight {:enable true :additional_vim_regex_highlighting false}
-      :ident {:enable true}
-      :auto_install true
-      :ensure_installed (keys (. cfg :languages))})))
+      :highlight {:enable true :additional_vim_regex_highlighting false :disable [""]}
+      :ident {:enable true}})))
 
 
 (when (feature :Comment)
@@ -221,7 +193,7 @@
 
 ;; Theme
 (fn configure-theme [name]
-  (when (feature name)
+  (when (theme name)
     (set vim.opt.background "dark")
     (vim.cmd.colorscheme name)
     (global toggle_background (fn []
@@ -337,7 +309,6 @@
               lspitem (. lspconfig lsp)]
           (lspitem.setup (get-lsp-setup))))))
   (when (feature :conform)
-    (print "conf")
     (let [conform (require :conform)]
       (conform.setup { :formatters_by_ft formatters-by-ft
                        :format_on_save { :timeout_ms 500 :lsp_format "fallback" }
