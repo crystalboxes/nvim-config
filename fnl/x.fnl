@@ -52,20 +52,6 @@
                  :typescript { :width 2 :expand true }
                  :python     { :width 4 :expand true } } })
 
-(local plugin-list 
-       ["rktjmp/hotpot.nvim"
-        "nvim-treesitter/nvim-treesitter"
-        "nvim-lua/plenary.nvim"
-        "neovim/nvim-lspconfig"
-        "nvim-telescope/telescope.nvim"
-        "numToStr/Comment.nvim"
-        "stevearc/conform.nvim"
-        "nyoom-engineering/oxocarbon.nvim"
-        "hrsh7th/cmp-nvim-lsp"
-        "hrsh7th/cmp-buffer"
-        "hrsh7th/nvim-cmp"
-        "lewis6991/gitsigns.nvim"])
-
 (fn add-cmd! [name x]
  (vim.api.nvim_create_user_command name x {}))
 
