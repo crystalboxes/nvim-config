@@ -29,6 +29,8 @@
   :languages
     { :fennel {}
       :c {}
+      :cucumber { :formatter "prettier" }
+      :python { :lsp "pyright" :formatter "black" :tab { :width 4 :expand true } }
       :typescript { :lsp "tsserver" :formatter "biome" :tab {:width 4 :expand false } }
       :javascript { :lsp "tsserver" :formatter "biome" }
       :go { :lsp "gopls" :formatter ["goimports" "gofmt"] }
@@ -231,6 +233,7 @@
   (fn on-attach [client]
     (map! :n "<leader>k" "vim.lsp.buf.hover") 
     (map! :n "<leader>r" "vim.lsp.buf.rename") 
+    (map! :n "<leader>a" "vim.lsp.buf.code_action")
     (map! :n "gd" "vim.lsp.buf.definition") 
     (map! :n "gy" "vim.lsp.buf.type_definition") 
     (map! :n "gr" "vim.lsp.buf.references") 
@@ -244,7 +247,9 @@
       (when (feature :nvim-cmp)
         (let [cmp-select { :behavior cmp.SelectBehavior.Select }]
           (cmp.setup 
-            { :mapping (cmp.mapping.preset.insert
+            { :preselect false
+              :confirmation { :completeopt "menu,menuone,noinsert" } 
+              :mapping (cmp.mapping.preset.insert
                          { "<C-p>" (cmp.mapping.select_prev_item cmp-select) 
                            "<C-n>" (cmp.mapping.select_next_item cmp_select)
                            "<Tab>" (cmp.mapping 
