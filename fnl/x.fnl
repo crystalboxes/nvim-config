@@ -204,7 +204,8 @@
         (set-highlight "TabLine" {:bg "#f0f0f0" :fg "#303030"})         ;; Light tabline
         (set-highlight "TabLineSel" {:bg "#d0d0d0" :fg "#000000"})      ;; Selected tab
         (set-highlight "TabLineFill" {:bg "#f0f0f0" :fg "#808080"})     ;; Fill area
-
+        ;; Customize Visual (selected text) to ensure Comment remains visible
+        (set-highlight "Visual" {:bg "#d0d0d0"}) ;; Light gray background for selected text
         (set-highlight "Comment" {:fg "#a0a0a0" :italic true})))
   (when (theme name)
     (set vim.opt.background "light")
