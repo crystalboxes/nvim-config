@@ -30,6 +30,7 @@
     { :fennel {}
       :c {}
       :cucumber { :formatter "prettier" }
+      :ocaml { :lsp "ocamllsp" :formatter "ocamlformat" }
       :python { :lsp "pyright" :formatter "black" :tab { :width 4 :expand true } }
       :typescript { :lsp "tsserver" :formatter "biome" :tab {:width 4 :expand false } }
       :javascript { :lsp "tsserver" :formatter "biome" }
@@ -45,7 +46,8 @@
       :conform true
       :gitsigns true }
   :themes 
-    { :oxocarbon true }})
+    { :oxocarbon true 
+      :catppuccin true }})
 
 (local default-lang-settings
        { :filetypes { :typescript [ "typescript" "typescriptreact" ] } 
@@ -179,10 +181,33 @@
 ;; Splash screen (remove)
 (vim.cmd "set shortmess+=I")
 
+;; Function to set highlight groups
+(fn set-highlight [group opts]
+  (vim.api.nvim_set_hl 0 group opts))
+
 ;; Theme
 (fn configure-theme [name]
+  (if (= name :default-light)
+    (do
+        (set vim.opt.background "light")
+        (vim.api.nvim_set_hl 0 "Normal" {:bg "NONE"})
+        (vim.api.nvim_set_hl 0 "NonText" {:bg "NONE"})
+        (vim.api.nvim_set_hl 0 "TelescopeNormal" {:bg "NONE"})
+        (vim.api.nvim_set_hl 0 "NvimTreeNormal" {:bg "NONE"})
+
+
+        ;; Customize StatusLine
+        (set-highlight "StatusLine" {:bg "#f0f0f0" :fg "#303030"})      ;; Light background, dark text
+        (set-highlight "StatusLineNC" {:bg "#e0e0e0" :fg "#808080"})    ;; Non-current status line
+
+        ;; Customize TabLine
+        (set-highlight "TabLine" {:bg "#f0f0f0" :fg "#303030"})         ;; Light tabline
+        (set-highlight "TabLineSel" {:bg "#d0d0d0" :fg "#000000"})      ;; Selected tab
+        (set-highlight "TabLineFill" {:bg "#f0f0f0" :fg "#808080"})     ;; Fill area
+
+        (set-highlight "Comment" {:fg "#a0a0a0" :italic true})))
   (when (theme name)
-    (set vim.opt.background "dark")
+    (set vim.opt.background "light")
     (vim.cmd.colorscheme name)
     (global toggle_background (fn []
       "Function to toggle the background option"
@@ -192,7 +217,7 @@
     (vim.api.nvim_set_keymap "n" "<C-a>" ":lua toggle_background()<CR>" {:noremap true :silent true})
     (vim.api.nvim_set_keymap "i" "<C-a>" ":lua toggle_background()<CR>" {:noremap true :silent true})))
 
-(configure-theme :oxocarbon)
+(configure-theme :default-light)
 
 ;; Keymaps
 (set vim.g.mapleader " ")
