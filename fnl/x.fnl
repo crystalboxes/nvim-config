@@ -261,6 +261,7 @@
     (map! :n "<leader>k" "vim.lsp.buf.hover") 
     (map! :n "<leader>r" "vim.lsp.buf.rename") 
     (map! :n "<leader>a" "vim.lsp.buf.code_action")
+    (map! :n "<leader>e" "vim.diagnostic.open_float")
     (map! :n "gd" "vim.lsp.buf.definition") 
     (map! :n "gy" "vim.lsp.buf.type_definition") 
     (map! :n "gr" "vim.lsp.buf.references") 
