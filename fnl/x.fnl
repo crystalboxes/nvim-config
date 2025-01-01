@@ -46,8 +46,7 @@
       :conform true
       :gitsigns true }
   :themes 
-    { :oxocarbon true 
-      :catppuccin true }})
+    { :catppuccin-latte true }})
 
 (local default-lang-settings
        { :filetypes { :typescript [ "typescript" "typescriptreact" ] } 
@@ -218,7 +217,7 @@
     (vim.api.nvim_set_keymap "n" "<C-a>" ":lua toggle_background()<CR>" {:noremap true :silent true})
     (vim.api.nvim_set_keymap "i" "<C-a>" ":lua toggle_background()<CR>" {:noremap true :silent true})))
 
-(configure-theme :default-light)
+(configure-theme :catppuccin-latte)
 
 ;; Keymaps
 (set vim.g.mapleader " ")
