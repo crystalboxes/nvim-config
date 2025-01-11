@@ -30,6 +30,7 @@
     { :fennel {}
       :c {}
       :cucumber { :formatter "prettier" }
+      :swift { :lsp "sourcekit" :formatter "swiftformat" }
       :ocaml { :lsp "ocamllsp" :formatter "ocamlformat" }
       :python { :lsp "pyright" :formatter "black" :tab { :width 4 :expand true } }
       :typescript { :lsp "tsserver" :formatter "biome" :tab {:width 4 :expand false } }
