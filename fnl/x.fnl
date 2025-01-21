@@ -214,9 +214,11 @@
       "Function to toggle the background option"
       (if (= vim.o.background "dark")
           (set vim.opt.background "light")
-          (set vim.opt.background "dark"))))
-    (vim.api.nvim_set_keymap "n" "<C-a>" ":lua toggle_background()<CR>" {:noremap true :silent true})
-    (vim.api.nvim_set_keymap "i" "<C-a>" ":lua toggle_background()<CR>" {:noremap true :silent true})))
+          (set vim.opt.background "dark"))))))
+; These were used to toggle themes, however I do not use themes at the moment,
+; also this breaks the toggle background functionality
+    ; (vim.api.nvim_set_keymap "n" "<C-a>" ":lua toggle_background()<CR>" {:noremap true :silent true})
+    ; (vim.api.nvim_set_keymap "i" "<C-a>" ":lua toggle_background()<CR>" {:noremap true :silent true})))
 
 (configure-theme :catppuccin-latte)
 
